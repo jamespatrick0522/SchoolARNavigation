@@ -1,79 +1,80 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# School AR Navigation (Android MVP)
 
-# Getting Started
+Local-first ARCore prototype for thesis mock-defense demos.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Stack
+- React Native CLI `0.76.3` (TypeScript)
+- Android only
+- `@reactvision/react-viro@2.41.6` for AR scenes and image marker anchoring
+- React Navigation (native stack)
+- AsyncStorage repository layer (replaceable later with SQLite/backend sync)
 
-## Step 1: Start the Metro Server
+## Core Features
+- Marker-first calibration with fixed `START-001` image target
+- Guided waypoint placement and destination placement
+- Local persistence for marker origin, routes, and destination metadata
+- Destination list/search/edit/delete
+- Re-scan marker and render AR route arrows
+- Tracking status banner + recovery message flow
+- Utilities screen with demo seed and reset
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+## Project Structure
+```text
+src/
+  app/
+  ar/
+    components/
+    hooks/
+    scenes/
+    utils/
+  components/
+  constants/
+  navigation/
+  screens/
+  services/
+  state/
+  storage/
+  types/
+  utils/
+  assets/
+    markers/
 ```
 
-## Step 2: Start your Application
+## Setup (Windows + Android)
+1. Install Android Studio, SDK 34+, and Java 17.
+2. Start emulator OR connect physical Android phone with USB debugging.
+3. Install dependencies:
+   ```powershell
+   npm install
+   ```
+4. Start Metro:
+   ```powershell
+   npm start
+   ```
+5. Run app:
+   ```powershell
+   npm run android
+   ```
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## Marker Asset
+`src/assets/markers/start_marker.png`
 
-### For Android
+Replace this with your real printed marker image, keeping the same filename.
 
-```bash
-# using npm
-npm run android
+Default physical width is configured as `0.155` meters in:
+- `src/constants/marker.ts`
+- `src/ar/utils/viroTargets.ts`
 
-# OR using Yarn
-yarn android
-```
+## Demo Flow
+1. Home -> `Start Calibration`
+2. Scan printed marker
+3. Fill destination details
+4. Place waypoints and destination
+5. Save route
+6. Home -> `Navigate` -> choose destination
+7. Re-scan marker and follow AR arrows
 
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## Notes
+- This prototype intentionally avoids claiming high-precision indoor localization.
+- Positions are marker-relative for repeatability during presentations.
+- If AR tracking degrades, UI asks user to re-scan the start marker.
